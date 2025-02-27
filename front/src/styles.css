@@ -1,0 +1,104 @@
+@import url(reset.css);
+@import url("https://fonts.googleapis.com/css2?family=Lato");
+
+* {
+  box-sizing: border-box;
+  font-family: "Lato", sans-serif;
+  font-size: var(--sm-text-size);
+  color: var(--text-color);
+  z-index: 1;
+}
+
+*:not(input, textarea) {
+  user-select: none;
+}
+
+body {
+  background: var(--background-l0-color);
+}
+
+header {
+  background: var(--background-l1-color);
+}
+
+button,
+input {
+  line-height: 1;
+  padding: var(--vertical-padding) 15px;
+  border-radius: var(--border-radius);
+  border: var(--border-disabled-color) solid var(--border-width);
+  background: var(--background-l2-color);
+  transition: var(--transition-curve) all;
+}
+
+form button,
+form input {
+  width: 100%;
+  display: block;
+}
+
+button.accent {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  z-index: 0;
+}
+
+button.accent:hover:not(:disabled) {
+  transform: scale(1.01);
+  box-shadow: 0px 0px 30px 2px var(--accent-color);
+  -moz-box-shadow: 0px 0px 30px 2px var(--accent-color);
+}
+
+button:disabled {
+  background: var(--border-color);
+  border-color: var(--border-color);
+}
+
+/* !variables */
+:root {
+  /* spaces & sizes */
+  --toolbar-height: 70px;
+  --toolbar-gap: 10px;
+  --border-width: 0.8px;
+  --border-radius: 6px;
+  --sm-border-radius: 5px;
+  /* text */
+  --sm-text-size: 14px;
+  --md-text-size: 20px;
+  --bg-text-size: 23px;
+  /* colors */
+  --background-l0-color: #171717;
+  --background-l1-color: rgba(33, 33, 35, 0.7);
+  --background-l2-color: rgba(46, 46, 48, 0.7);
+  --text-color: #ffffff;
+  --text-disabled-color: #c0c0c0;
+  --subtext-color: #b4b4b4;
+  --border-color: #a5a5a5;
+  --border-disabled-color: #3a3a3a;
+  --border-active-color: #c0c0c0;
+  --accent-color: rgb(101, 125, 212);
+  /* others */
+  --vertical-padding: 10px;
+  --transition-curve: 0.3s ease-in-out;
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+}
+
+.flex-container.horizontal {
+  flex-flow: row nowrap;
+}
+
+.flex-container.vertical {
+  flex-flow: column nowrap;
+}
+
+.spacer {
+  flex: 1 0 auto;
+}
+
+.subtext {
+  color: var(--subtext-color);
+}

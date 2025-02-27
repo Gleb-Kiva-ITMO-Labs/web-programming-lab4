@@ -1,0 +1,17 @@
+header {
+  margin: 5px;
+  border-radius: var(--border-radius);
+  padding: var(--vertical-padding) 15px;
+  gap: 10px;
+  z-index: 99999;
+  backdrop-filter: blur(10px);
+  mix-blend-mode: lighten;
+}
+
+#logo {
+  cursor: pointer;
+  height: calc(
+    var(--sm-text-size) + var(--vertical-padding) * 2 + 1px - 5px * 2
+  );
+  margin: 5px 0;
+}

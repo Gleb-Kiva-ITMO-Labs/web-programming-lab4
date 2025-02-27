@@ -1,0 +1,101 @@
+<div class="flex-container horizontal" style="gap: var(--content-offset)">
+  <div id="graph-section" class="container">
+    <div class="overlay"></div>
+    <svg id="graph-view"></svg>
+  </div>
+  <div id="actions-section" class="flex-container vertical">
+    <div id="results-section">
+      <table id="results-table">
+        <thead>
+          <tr>
+            <th>X</th>
+            <th>Y</th>
+            <th>R</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody id="results-table-empty">
+          <tr>
+            <td colspan="4">No results</td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>4</td>
+            <td>
+              <div class="tooltip-container">
+                <span>Попал</span>
+                <div class="tooltip error-message">ЭТО НЕ РАБОТАЕТ</div>
+              </div>
+            </td>
+          </tr>
+          <tr class="filled-row">
+            <td colspan="4">Executed at 13:45 in 5 seconds</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="form-section">
+      <form
+        id="shooter-form"
+        onchange="formUpdated()"
+        onsubmit="formSubmitted(event)"
+      >
+        <span>Choose X coordinate of the shot:</span>
+        <div class="button-toggle" style="margin-top: 5px">
+          <input name="x" type="radio" id="bt-1" value="-4" />
+          <label for="bt-1">-4</label>
+          <input name="x" type="radio" id="bt-2" value="-3" />
+          <label for="bt-2">-3</label>
+          <input name="x" type="radio" id="bt-3" value="-2" />
+          <label for="bt-3">-2</label>
+          <input name="x" type="radio" id="bt-4" value="-1" />
+          <label for="bt-4">-1</label>
+          <input name="x" type="radio" id="bt-5" value="0" checked />
+          <label for="bt-5">0</label>
+          <input name="x" type="radio" id="bt-6" value="1" />
+          <label for="bt-6">1</label>
+          <input name="x" type="radio" id="bt-7" value="2" />
+          <label for="bt-7">2</label>
+          <input name="x" type="radio" id="bt-8" value="3" />
+          <label for="bt-8">3</label>
+          <input name="x" type="radio" id="bt-9" value="4" />
+          <label for="bt-9">4</label>
+        </div>
+        <span style="margin-top: 5px; display: block"
+          >Enter Y coordinate of the shot:</span
+        >
+        <input name="y" type="number" style="width: 100%; margin-top: 5px" />
+        <span style="margin-top: 5px; display: block"
+          >Choose the figure's radius:</span
+        >
+        <div class="options-select" style="width: 100%; margin-top: 5px">
+          <input type="checkbox" id="ch-1" name="r-1" />
+          <label for="ch-1">1</label>
+          <input type="checkbox" id="ch-2" name="r-15" />
+          <label for="ch-2">1.5</label>
+          <input type="checkbox" id="ch-3" name="r-2" />
+          <label for="ch-3">2</label>
+          <input type="checkbox" id="ch-4" name="r-25" />
+          <label for="ch-4">2.5</label>
+          <input type="checkbox" id="ch-5" name="r-3" />
+          <label for="ch-5">3</label>
+        </div>
+        <div
+          id="input-validation-error-message"
+          class="error-message"
+          style="margin-top: 5px"
+        ></div>
+        <button
+          type="submit"
+          class="fire-button"
+          style="width: 100%; margin-top: 10px"
+        >
+          Fire
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

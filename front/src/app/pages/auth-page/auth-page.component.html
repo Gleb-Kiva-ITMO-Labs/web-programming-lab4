@@ -1,0 +1,47 @@
+<form
+  id="auth-form"
+  #authForm="ngForm"
+  [formGroup]="authFormControl"
+  class="flex-container vertical"
+>
+  @if (!noSuchUser) {
+  <input placeholder="Login" type="text" formControlName="login" />
+  <span class="error-message" *ngIf="login!.hasError('required')">
+    Login is required
+  </span>
+  <span class="error-message" *ngIf="login!.hasError('minlength')">
+    Login must be at least 4 characters long
+  </span>
+  <span class="error-message" *ngIf="login!.hasError('minlength')">
+    Login must be less then 36 characters long
+  </span>
+  <input placeholder="Password" type="password" formControlName="password" />
+  <span class="error-message" *ngIf="password!.hasError('required')">
+    Password is required
+  </span>
+  <span class="error-message" *ngIf="password!.hasError('minlength')">
+    Password must be at least 8 characters long
+  </span>
+  <span class="error-message" *ngIf="password!.hasError('minlength')">
+    Password must be less then 36 characters long
+  </span>
+  <button
+    class="accent"
+    [disabled]="authForm.invalid"
+    (mouseenter)="authForm.valid && changeShapesAnimationSpeed(true)"
+    (mouseleave)="changeShapesAnimationSpeed(false)"
+    (click)="signIn($event)"
+  >
+    Submit
+  </button>
+  } @else {
+  <span>There is no user with this login</span>
+  <button (click)="signUp($event)">Create one</button>
+  <button (click)="noSuchUser = false">Take me back</button>
+  }
+</form>
+<div id="moving-shapes-container">
+  <app-moving-shapes
+    [animationSpeed]="shapesAnimationSpeed"
+  ></app-moving-shapes>
+</div>

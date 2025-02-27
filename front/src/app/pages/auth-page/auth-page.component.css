@@ -1,0 +1,22 @@
+#auth-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  gap: 5px;
+}
+
+#moving-shapes-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+  filter: blur(40px);
+}
+
+.error-message {
+  color: rgb(255, 0, 0, 0.6);
+}
