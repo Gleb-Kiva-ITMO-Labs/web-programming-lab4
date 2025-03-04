@@ -59,7 +59,11 @@ public class AuthResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(User user) {
         User registeredUser = userService.findByUsername(user.getLogin());
+        System.out.println(user.getLogin());
+        System.out.println(user.getPassword());
+
         if (registeredUser == null) {
+            System.out.println("!!!! NO USER");
             return Response
                     .status(Response.Status.UNAUTHORIZED)
                     .entity("User not found")
@@ -67,6 +71,7 @@ public class AuthResource {
         }
 
         if (!PasswordUtil.verifyPassword(user.getPassword(), registeredUser.getPassword())) {
+            System.out.println("!!!! INVALID PASSWORD");
             return Response
                     .status(Response.Status.UNAUTHORIZED)
                     .entity("Invalid password")
@@ -76,7 +81,7 @@ public class AuthResource {
         String token = tokenService.generateToken(registeredUser.getLogin());
         return Response
                 .status(Response.Status.OK)
-                .entity("{\"token\":\"" + token + "\"}")
+                .entity("{\"token\":\"" + token + "\", \"login\":\"" + user.getLogin() + "\"}")
                 .build();
     }
 }

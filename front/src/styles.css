@@ -102,3 +102,12 @@ button:disabled {
 .subtext {
   color: var(--subtext-color);
 }
+
+.error-message {
+  background-color: #d34c4c;
+  color: #792727;
+  width: 100%;
+  text-align: center;
+  padding: 5px;
+  border-radius: var(--border-radius);
+}

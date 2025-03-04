@@ -24,7 +24,7 @@ public class ResultService {
 
     public void clearResultsForUser(User user) {
         em.getTransaction().begin();
-        em.createQuery("DELETE FROM Result r WHERE r.user = :user")
+        em.createQuery("DELETE FROM ResultInfo r WHERE r.user = :user")
                 .setParameter("user", user)
                 .executeUpdate();
         em.getTransaction().commit();

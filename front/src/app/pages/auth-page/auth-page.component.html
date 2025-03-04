@@ -12,7 +12,7 @@
   <span class="error-message" *ngIf="login!.hasError('minlength')">
     Login must be at least 4 characters long
   </span>
-  <span class="error-message" *ngIf="login!.hasError('minlength')">
+  <span class="error-message" *ngIf="login!.hasError('maxlength')">
     Login must be less then 36 characters long
   </span>
   <input placeholder="Password" type="password" formControlName="password" />
@@ -22,12 +22,12 @@
   <span class="error-message" *ngIf="password!.hasError('minlength')">
     Password must be at least 8 characters long
   </span>
-  <span class="error-message" *ngIf="password!.hasError('minlength')">
+  <span class="error-message" *ngIf="password!.hasError('maxlength')">
     Password must be less then 36 characters long
   </span>
   <button
     class="accent"
-    [disabled]="authForm.invalid"
+    [disabled]="authForm.invalid || isLoading"
     (mouseenter)="authForm.valid && changeShapesAnimationSpeed(true)"
     (mouseleave)="changeShapesAnimationSpeed(false)"
     (click)="signIn($event)"
@@ -35,10 +35,19 @@
     Submit
   </button>
   } @else {
-  <span>There is no user with this login</span>
-  <button (click)="signUp($event)">Create one</button>
+  <span>There is no user with such login</span>
+  <button
+    class="accent"
+    [disabled]="authForm.invalid || isLoading"
+    (mouseenter)="authForm.valid && changeShapesAnimationSpeed(true)"
+    (mouseleave)="changeShapesAnimationSpeed(false)"
+    (click)="signUp($event)"
+  >
+    Create one
+  </button>
   <button (click)="noSuchUser = false">Take me back</button>
   }
+  <span class="error-message" *ngIf="errorMessage"> {{ errorMessage }} </span>
 </form>
 <div id="moving-shapes-container">
   <app-moving-shapes

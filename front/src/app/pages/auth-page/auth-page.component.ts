@@ -19,7 +19,10 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrl: './auth-page.component.css',
 })
 export class AuthPageComponent {
+  protected errorMessage: string | null = null;
+  protected isLoading = false;
   protected noSuchUser: boolean = false;
+
   protected authFormControl: FormGroup = new FormGroup({
     login: new FormControl('', [
       Validators.required,
@@ -46,33 +49,34 @@ export class AuthPageComponent {
 
   signIn($event?: MouseEvent) {
     $event && $event.preventDefault();
-    if (this.authFormControl.valid) {
-      this.authService
-        .signIn(this.login!.value, this.password!.value)
-        .subscribe({
-          next: (response) => this.router.navigate(['/']),
-          error: (error: HttpErrorResponse) => {
-            this.noSuchUser = true;
-            console.log(error); // TODO check if seriouss, if not set noSuchUser
-          },
-        });
-    }
+    if (this.authFormControl.invalid || this.isLoading) return;
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.noSuchUser = false;
+
+    this.authService.signIn(this.login!.value, this.password!.value).subscribe({
+      next: () => this.router.navigate(['/shooting']),
+      error: (error: HttpErrorResponse) => {
+        this.isLoading = false;
+        if (error.error === 'User not found') this.noSuchUser = true;
+        else this.errorMessage = error.message;
+      },
+    });
   }
 
   signUp($event?: MouseEvent) {
     $event && $event.preventDefault();
-    if (this.authFormControl.valid) {
-      this.authService
-        .signUp(this.login!.value, this.password!.value)
-        .subscribe({
-          next: (response) => this.signIn(),
-          error: (error: HttpErrorResponse) => {
-            console.log(error); // smthn serious
-          },
-        });
-    } else {
-      this.noSuchUser = false;
-    }
+    if (this.authFormControl.invalid || this.isLoading) return;
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    this.authService.signUp(this.login!.value, this.password!.value).subscribe({
+      next: () => this.signIn(),
+      error: (error: HttpErrorResponse) => {
+        this.isLoading = false;
+        this.errorMessage = error.message;
+      },
+    });
   }
 
   changeShapesAnimationSpeed(isHovered: boolean) {
