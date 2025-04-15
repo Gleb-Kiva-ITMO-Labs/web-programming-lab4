@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import ru.s408766.shooter.utils.models.User;
+import ru.s408766.shooter.utils.services.db.UserService;
 
 @Stateless
 public class TokenService {

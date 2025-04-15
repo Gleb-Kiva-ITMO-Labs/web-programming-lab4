@@ -1,4 +1,4 @@
-package ru.s408766.shooter.utils.services;
+package ru.s408766.shooter.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

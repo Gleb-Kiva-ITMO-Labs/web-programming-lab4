@@ -1,3 +1,40 @@
+:host {
+  --content-offset: 20px;
+  --header-height: 50px;
+  --border-width: 0.8px;
+  flex: 1 0 auto;
+  width: 100%;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.flex-container.horizontal {
+  flex-flow: row nowrap;
+}
+
+.flex-container.vertical {
+  flex-flow: column nowrap;
+}
+
+.spacer {
+  flex: 1 0 auto;
+}
+
+.subtext {
+  color: var(--subtext-color);
+}
+
+.error-message {
+  background-color: #d34c4c;
+  color: #792727;
+  width: 100%;
+  text-align: center;
+  padding: 5px;
+  border-radius: var(--border-radius);
+}
+
 table {
   width: 100%;
   border-spacing: 0;
@@ -31,12 +68,13 @@ td {
   border-collapse: collapse;
   border: var(--border);
 }
+
 thead th {
   background: var(--background-l1-color);
 }
 
 .filled-row {
-  background: var(--border-color);
+  background: var(--background-l2-color);
 }
 
 .filled-row td {
@@ -45,14 +83,16 @@ thead th {
   font-size: 10px;
 }
 
+#graph-container {
+  width: 100%;
+  height: 100%;
+}
+
 #graph-section,
 #graph-view {
-  width: calc(
-    min(100vh - var(--header-height) - var(--content-offset), 100vw - 300px)
-  );
-  height: calc(
-    min(100vh - var(--header-height) - var(--content-offset), 100vw - 300px)
-  );
+  aspect-ratio: 1 / 1;
+  max-width: calc(100vw - 400px);
+  min-width: 300px;
 }
 
 #actions-section {
@@ -71,4 +111,67 @@ thead th {
   padding: 10px;
   border-top: var(--border);
   background: var(--background-l1-color);
+}
+
+@media screen and (max-width: 1190px) {
+  :host {
+    --content-offset: 15px;
+  }
+
+  .flex-container.horizontal {
+    flex-direction: column;
+  }
+
+  #graph-section,
+  #graph-view {
+    max-width: 100%;
+    min-width: auto;
+  }
+
+  #actions-section {
+    width: 100%;
+  }
+
+  #results-section {
+    overflow: scroll;
+    height: 400px;
+    flex-basis: auto;
+    order: 2;
+    margin-top: 15px;
+  }
+
+  #form-section {
+    border-top: none;
+    border-left: var(--border);
+  }
+}
+
+@media screen and (max-width: 721px) {
+  :host {
+    --content-offset: 10px;
+  }
+
+  #graph-section,
+  #graph-view {
+    max-width: 100%;
+  }
+
+  #actions-section {
+    width: 100%;
+  }
+
+  #form-section {
+    border-left: none;
+    border-top: var(--border);
+  }
+
+  th,
+  td {
+    padding: 8px 3px;
+    font-size: 12px;
+  }
+
+  .filled-row td {
+    font-size: 9px;
+  }
 }

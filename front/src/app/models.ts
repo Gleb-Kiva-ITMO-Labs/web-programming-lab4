@@ -1,7 +1,7 @@
 export class UserCredentials {
-  login: string;
+  email: string;
 
-  constructor(login: string) {
-    this.login = login;
+  constructor(email: string) {
+    this.email = email;
   }
 }

@@ -1,10 +1,9 @@
-#auth-form {
+#auth {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 400px;
-  gap: 5px;
 }
 
 #moving-shapes-container {
@@ -17,3 +16,52 @@
   filter: blur(40px);
 }
 
+.flex-container.vertical {
+  gap: 5px;
+}
+
+.flex-container button,
+.flex-container input {
+  width: 100%;
+  display: block;
+}
+
+.flex-container {
+  align-items: center;
+}
+
+@media screen and (max-width: 1190px) {
+  #auth {
+    width: 350px;
+  }
+
+  .flex-container.vertical {
+    gap: 8px;
+  }
+}
+
+@media screen and (max-width: 721px) {
+  #auth {
+    width: 90%;
+    max-width: 300px;
+  }
+
+  #moving-shapes-container {
+    display: none;
+  }
+
+  .flex-container.vertical {
+    gap: 10px;
+  }
+
+  button,
+  input {
+    padding: calc(var(--vertical-padding) * 0.8) 15px;
+    font-size: 0.9em;
+  }
+
+  .error-message {
+    font-size: 0.85em;
+    padding: 4px;
+  }
+}

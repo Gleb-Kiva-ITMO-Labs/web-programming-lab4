@@ -1,4 +1,4 @@
-package ru.s408766.shooter.utils.services;
+package ru.s408766.shooter.utils.services.db;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -23,11 +23,22 @@ public class UserService {
         }
     }
 
-    public User findByUsername(String login) {
-        String query = "SELECT u FROM User u WHERE u.login = :login";
+    public User findByUsername(String email) {
+        String query = "SELECT u FROM User u WHERE u.email = :email";
         TypedQuery<User> typedQuery = em.createQuery(query, User.class);
-        typedQuery.setParameter("login", login);
+        typedQuery.setParameter("email", email);
         return typedQuery.getResultStream().findFirst().orElse(null);
     }
 
+    public boolean updateUser(User user) {
+        try {
+            em.getTransaction().begin();
+            em.merge(user);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            return false;
+        }
+    }
 }

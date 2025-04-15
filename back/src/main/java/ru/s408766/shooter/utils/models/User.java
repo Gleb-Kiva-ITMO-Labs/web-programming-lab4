@@ -16,15 +16,15 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "login", unique = true, nullable = false)
-    private String login;
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
     @Column(name = "password", nullable = false)
     private String password;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ResultInfo> results;
 
-    public User(String login, String password) {
-        this.login = login;
+    public User(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 

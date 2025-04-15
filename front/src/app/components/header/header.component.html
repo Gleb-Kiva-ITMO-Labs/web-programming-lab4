@@ -1,11 +1,11 @@
 <header class="flex-container horizontal">
   <img src="logo.svg" id="logo" />
-  <span class="subtext">
+  <span id="credits" class="subtext">
     Developed by Gleb Kiva &middot; P3208 &middot; №69879866
   </span>
   <div class="spacer"></div>
   @if (authService.userCredentials(); as credentials) {
-  <span class="subtext">{{ credentials.login }}</span>
+  <span class="subtext">{{ credentials.email }}</span>
   <button (click)="signOut()">Log out</button>
   }
 </header>

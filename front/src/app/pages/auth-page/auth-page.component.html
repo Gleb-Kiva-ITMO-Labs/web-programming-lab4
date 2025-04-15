@@ -1,56 +1,148 @@
-<form
-  id="auth-form"
-  #authForm="ngForm"
-  [formGroup]="authFormControl"
-  class="flex-container vertical"
->
-  @if (!noSuchUser) {
-  <input placeholder="Login" type="text" formControlName="login" />
-  <span class="error-message" *ngIf="login!.hasError('required')">
-    Login is required
-  </span>
-  <span class="error-message" *ngIf="login!.hasError('minlength')">
-    Login must be at least 4 characters long
-  </span>
-  <span class="error-message" *ngIf="login!.hasError('maxlength')">
-    Login must be less then 36 characters long
-  </span>
-  <input placeholder="Password" type="password" formControlName="password" />
-  <span class="error-message" *ngIf="password!.hasError('required')">
-    Password is required
-  </span>
-  <span class="error-message" *ngIf="password!.hasError('minlength')">
-    Password must be at least 8 characters long
-  </span>
-  <span class="error-message" *ngIf="password!.hasError('maxlength')">
-    Password must be less then 36 characters long
-  </span>
-  <button
-    class="accent"
-    [disabled]="authForm.invalid || isLoading"
-    (mouseenter)="authForm.valid && changeShapesAnimationSpeed(true)"
-    (mouseleave)="changeShapesAnimationSpeed(false)"
-    (click)="signIn($event)"
+<div id="auth">
+  @switch (currentStage) { @case (AuthStage.LOGIN) {
+  <form
+    #authForm="ngForm"
+    [formGroup]="authFormControl"
+    class="flex-container vertical"
   >
-    Submit
-  </button>
-  } @else {
-  <span>There is no user with such login</span>
-  <button
-    class="accent"
-    [disabled]="authForm.invalid || isLoading"
-    (mouseenter)="authForm.valid && changeShapesAnimationSpeed(true)"
-    (mouseleave)="changeShapesAnimationSpeed(false)"
-    (click)="signUp($event)"
+    <input placeholder="Email" type="text" formControlName="email" />
+    <span class="error-message" *ngIf="email!.hasError('required')">
+      Email is required
+    </span>
+    <span class="error-message" *ngIf="email!.hasError('email')">
+      Enter valid email
+    </span>
+    <span class="error-message" *ngIf="email!.hasError('minlength')">
+      Email must be at least 4 characters long
+    </span>
+    <span class="error-message" *ngIf="email!.hasError('maxlength')">
+      Email must be less then 36 characters long
+    </span>
+    <input
+      [placeholder]="
+        currentStage == AuthStage.LOGIN ? 'Password' : 'New password'
+      "
+      type="password"
+      formControlName="password"
+    />
+    <span class="error-message" *ngIf="password!.hasError('required')">
+      Password is required
+    </span>
+    <span class="error-message" *ngIf="password!.hasError('minlength')">
+      Password must be at least 8 characters long
+    </span>
+    <span class="error-message" *ngIf="password!.hasError('maxlength')">
+      Password must be less then 36 characters long
+    </span>
+    <button
+      class="accent"
+      [disabled]="authForm.invalid || isLoading"
+      (mouseenter)="authForm.valid && changeShapesAnimationSpeed(true)"
+      (mouseleave)="changeShapesAnimationSpeed(false)"
+      (click)="signIn($event)"
+    >
+      Submit
+    </button>
+    <button
+      matTooltip="Sends a verification code on your email, then sets password you entered as a new one"
+      [disabled]="authForm.invalid || isLoading"
+      (click)="requestPasswordChange()"
+    >
+      I forgot my password
+    </button>
+  </form>
+  } @case (AuthStage.NO_USER) {
+  <div class="flex-container vertical">
+    <span
+      >There is no user with email
+      {{ authFormControl.get("email")?.value }}</span
+    >
+    <button
+      class="accent"
+      [disabled]="authFormControl.invalid || isLoading"
+      (mouseenter)="authFormControl.valid && changeShapesAnimationSpeed(true)"
+      (mouseleave)="changeShapesAnimationSpeed(false)"
+      (click)="requestVerificationCode($event)"
+    >
+      Create one
+    </button>
+    <button (click)="currentStage = AuthStage.LOGIN">Take me back</button>
+  </div>
+  } @case (AuthStage.VERIFY_CODE) {
+  <form
+    #codeForm="ngForm"
+    [formGroup]="codeFormControl"
+    class="flex-container vertical"
   >
-    Create one
-  </button>
-  <button (click)="noSuchUser = false">Take me back</button>
-  }
-  <span class="error-message" *ngIf="errorMessage"> {{ errorMessage }} </span>
-</form>
+    <span>
+      Enter verification code sent to {{ authFormControl.get("email")?.value }}
+    </span>
+    <input
+      placeholder="6-digit verification code"
+      type="text"
+      formControlName="verificationCode"
+    />
+    <span class="error-message" *ngIf="verificationCode!.hasError('required')">
+      Verification code is required
+    </span>
+    <span class="error-message" *ngIf="verificationCode!.hasError('pattern')">
+      Verification code must be 6 digits
+    </span>
+    <button
+      class="accent"
+      [disabled]="
+        authFormControl.invalid || codeFormControl.invalid || isLoading
+      "
+      (mouseenter)="changeShapesAnimationSpeed(true)"
+      (mouseleave)="changeShapesAnimationSpeed(false)"
+      (click)="signUp($event)"
+    >
+      Verify Code
+    </button>
+    <button (click)="currentStage = AuthStage.LOGIN">Change credentials</button>
+  </form>
+  } @case (AuthStage.PASSWORD_RESET) {
+  <form
+    #resetForm="ngForm"
+    [formGroup]="resetFormControl"
+    class="flex-container vertical"
+  >
+    <span>
+      Enter verification code sent to
+      {{ resetFormControl.get("email")?.value }} to reset password
+    </span>
+    <input
+      placeholder="6-digit verification code"
+      type="text"
+      formControlName="verificationCode"
+    />
+    <span class="error-message" *ngIf="resetVerificationCode!.hasError('required')">
+      Verification code is required
+    </span>
+    <span class="error-message" *ngIf="resetVerificationCode!.hasError('pattern')">
+      Verification code must be 6 digits
+    </span>
+    <button
+      class="accent"
+      [disabled]="
+        authFormControl.invalid || resetFormControl.invalid || isLoading
+      "
+      (mouseenter)="changeShapesAnimationSpeed(true)"
+      (mouseleave)="changeShapesAnimationSpeed(false)"
+      (click)="confirmPasswordChange($event)"
+    >
+      Verify Code
+    </button>
+    <button (click)="currentStage = AuthStage.LOGIN">I remembered it</button>
+  </form>
+  } }
+  <div style="margin-top: 5px" class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+</div>
 <div id="moving-shapes-container">
   <app-moving-shapes
+    [shapeSize]="errorMessage ? 90 : 450"
     [animationSpeed]="shapesAnimationSpeed"
   ></app-moving-shapes>
 </div>

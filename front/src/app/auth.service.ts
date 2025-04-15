@@ -13,19 +13,19 @@ export class AuthService {
   userCredentials: WritableSignal<UserCredentials | null> = signal(null);
 
   constructor(private http: HttpClient) {
-    const storedLogin = localStorage.getItem('login');
+    const storedEmail = localStorage.getItem('email');
     const storedToken = localStorage.getItem('auth_token');
-    if (storedLogin && storedToken) {
-      this.userCredentials.set(new UserCredentials(storedLogin));
+    if (storedEmail && storedToken) {
+      this.userCredentials.set(new UserCredentials(storedEmail));
     } else {
       this.signOut();
     }
   }
 
-  signIn(login: string, password: string): Observable<AuthResponse> {
+  signIn(email: string, password: string): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${this.API_URL}/login`, {
-        login,
+      .post<AuthResponse>(`${this.API_URL}/signin`, {
+        email,
         password,
       })
       .pipe(
@@ -38,20 +38,39 @@ export class AuthService {
   }
 
   private handleSignInSuccess(result: AuthResponse): void {
-    this.userCredentials.set(new UserCredentials(result.login));
+    this.userCredentials.set(new UserCredentials(result.email));
     localStorage.setItem('auth_token', result.token);
-    localStorage.setItem('login', result.login);
+    localStorage.setItem('email', result.email);
   }
 
   isSignedIn(): boolean {
     return !!localStorage.getItem('auth_token');
   }
 
-  signUp(login: string, password: string): Observable<AuthResponse> {
+  requestVerificationCode(email: string): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${this.API_URL}/register`, {
-        login: login,
+      .post<AuthResponse>(`${this.API_URL}/request-2fa`, {
+        email,
+      })
+      .pipe(
+        shareReplay(1),
+        tap({
+          error: (err) =>
+            console.error("Verification code can't be received:", err),
+        })
+      );
+  }
+
+  signUp(
+    email: string,
+    password: string,
+    verificationCode: string
+  ): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${this.API_URL}/signup`, {
+        email: email,
         password: password,
+        verificationCode: verificationCode,
       })
       .pipe(
         shareReplay(1),
@@ -61,9 +80,42 @@ export class AuthService {
       );
   }
 
+  requestPasswordReset(email: string): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${this.API_URL}/request-password-reset`, {
+        email,
+      })
+      .pipe(
+        shareReplay(1),
+        tap({
+          error: (err) => console.error('Password reset request failed:', err),
+        })
+      );
+  }
+
+  confirmPasswordChange(
+    email: string,
+    password: string,
+    verificationCode: string
+  ): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${this.API_URL}/reset-password`, {
+        email,
+        password,
+        verificationCode,
+      })
+      .pipe(
+        shareReplay(1),
+        tap({
+          next: (result) => this.handleSignInSuccess(result),
+          error: (err) => console.error('Password reset failed:', err),
+        })
+      );
+  }
+
   signOut() {
     localStorage.removeItem('auth_token');
-    localStorage.removeItem('login');
+    localStorage.removeItem('email');
     this.userCredentials.set(null);
   }
 }

@@ -12,10 +12,16 @@
 
         <properties>
             <!-- Database connection settings -->
+            <!--            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/postgres"/>-->
+            <!--            <property name="hibernate.connection.username" value="postgres"/>-->
+            <!--            <property name="hibernate.connection.password" value="postgres"/>-->
+            <property name="hibernate.connection.username" value="s408766"/>
+            <property name="hibernate.connection.password" value="p5Lfiu0sqqQbKwff"/>
+            <property name="hibernate.connection.url" value="jdbc:postgresql://pg:5432/studs"/>
+
+
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/shooter_db"/>
-            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
-            <property name="jakarta.persistence.jdbc.password" value="postgres"/>
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>

@@ -1,5 +1,17 @@
-<div class="flex-container horizontal" style="gap: var(--content-offset)">
-  <app-graph [radius]="3" [points]="[]"></app-graph>
+<div
+  class="flex-container horizontal"
+  style="
+    gap: var(--content-offset);
+    margin: var(--content-offset);
+    height: calc(100% - var(--content-offset) * 2);
+  "
+>
+  <div id="graph-section">
+    <div id="graph-container">
+      <div class="overlay"></div>
+      <svg id="graph-view"></svg>
+    </div>
+  </div>
   <div id="actions-section" class="flex-container vertical">
     <div id="results-section">
       <table id="results-table">
@@ -11,29 +23,85 @@
             <th>Result</th>
           </tr>
         </thead>
+        @if (results.length === 0) {
         <tbody id="results-table-empty">
           <tr>
             <td colspan="4">No results</td>
           </tr>
         </tbody>
+        } @else { @for (result of results; track $index) {
         <tbody>
           <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>4</td>
-            <td>
-              <div class="tooltip-container">
-                <span>Попал</span>
-                <div class="tooltip error-message">ЭТО НЕ РАБОТАЕТ</div>
-              </div>
-            </td>
+            <td>{{ round2(result.x) }}</td>
+            <td>{{ round2(result.y) }}</td>
+            <td>{{ round2(result.r) }}</td>
+            <td>{{ result.isHit ? "Hit" : "Miss" }}</td>
           </tr>
           <tr class="filled-row">
-            <td colspan="4">Executed at 13:45 in 5 seconds</td>
+            <td colspan="4">
+              Executed at {{ convertDateString(result.startTime) }} in
+              {{ result.scriptTime }} ns
+            </td>
           </tr>
         </tbody>
+        } }
       </table>
     </div>
-    <div id="form-section"></div>
+    <div id="form-section">
+      <form
+        #shootingForm="ngForm"
+        [formGroup]="shootingFormControl"
+        class="flex-container vertical"
+        style="gap: 6px"
+      >
+        <input
+          placeholder="X Shot Coordinate"
+          type="text"
+          formControlName="xShot"
+        />
+        <span class="error-message" *ngIf="xShot!.hasError('required')">
+          X Shot Coordinate is required
+        </span>
+        <span class="error-message" *ngIf="xShot!.hasError('max') || xShot!.hasError('min')">
+          X Shot Coordinate should be between -4 and 4
+        </span>
+        <input
+          placeholder="Y Shot Coordinate"
+          type="text"
+          formControlName="yShot"
+        />
+        <span class="error-message" *ngIf="yShot!.hasError('required')">
+          Y Shot Coordinate is required
+        </span>
+        <span class="error-message" *ngIf="yShot!.hasError('max') || yShot!.hasError('min')">
+          Y Shot Coordinate should be between -5 and 5
+        </span>
+        <input
+          placeholder="Figure's Radius"
+          type="text"
+          formControlName="shapeRadius"
+          (input)="redrawGraph()"
+        />
+        <span class="error-message" *ngIf="shapeRadius!.hasError('required')">
+          Radius is required
+        </span>
+        <span class="error-message" *ngIf="shapeRadius!.hasError('max') || shapeRadius!.hasError('min')">
+          Radius should be between 1 and 4
+        </span>
+        <span class="error-message" *ngIf="shapeRadius!.hasError('pattern')">
+          Radius should be a number between 1 and 4 with .25 step
+        </span>
+        <button
+          class="accent"
+          [disabled]="shootingFormControl.invalid || isLoading"
+          (click)="submitResult()"
+        >
+          Submit
+        </button>
+        @if (results.length > 0) {
+        <button (click)="clearResults()">Clear results</button>
+        }
+      </form>
+    </div>
   </div>
 </div>
